@@ -121,25 +121,30 @@ const Index = () => {
   useEffect(() => { fetchDailyQuiz(); }, []);
 
   // 📜 Charger le proverbe du jour depuis ton API eTantara (Spring Boot)
-  useEffect(() => {
-    const fetchDailyProverb = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:8055/api/contenus?type=ohabolana&limit=1"
-        );
-        if (!response.ok)
-          throw new Error("Erreur lors du chargement du proverbe");
-        const data = await response.json();
+useEffect(() => {
+  const fetchDailyProverb = async () => {
+    try {
+      const API_URL = import.meta.env.VITE_API_URL;
 
-        // Selon ton contrôleur, c’est probablement une liste (List<ContenuCulturel>)
-        setDailyProverb(data[0] || null);
-      } catch (error) {
-        console.error("Erreur chargement proverbe:", error);
+      const response = await fetch(
+        `${API_URL}/api/contenus?type=ohabolana&limit=1`
+      );
+
+      if (!response.ok) {
+        throw new Error("Erreur lors du chargement du proverbe");
       }
-    };
 
-    fetchDailyProverb();
-  }, []);
+      const data = await response.json();
+      setDailyProverb(data[0] || null);
+
+    } catch (error) {
+      console.error("Erreur chargement proverbe:", error);
+    }
+  };
+
+  fetchDailyProverb();
+}, []);
+
 
   return (
     <div>
